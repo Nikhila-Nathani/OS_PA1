@@ -1,0 +1,66 @@
+Lab1Answers
+*********************************************************************************
+
+1) What are the advantages and disadvantages of each of the two scheduling policies? Also, give the advantages and disadvantages of the round robin scheduling policy originally implemented in Xinu.
+
+Sol:
+
+RANDOMSCHED -
+
+	Advantages:
+		As the scheduling is random, there won't be any starvation, for lower priority processes
+		Because of this randomness, the processes would be executed in a different order each time, thereby probability of execution for all processes is more in comparision to the default XINU scheduling
+	
+        Disadvantages:
+		The higher priority processes would not get executed first, hence there might be starvation for those
+		
+LINUXSCHED -
+
+	Advantages:
+		It has no randomness, hence the scheduling will be done in a certain pattern that can be anticipated 
+		All the processes are given time to execute, based on goodness, hence fairness can be achieved without any starvation
+		Even the blocked processes can be executed in the next epoch, hence they are given a chance to run, thereby the scheduling is good
+
+	Disadvantages:
+		It is complex hence it takes more CPU time for scheduling, when compared to other schedulers
+		It has high overload due to heavy context switching, hence CPU utilization can be very low		
+		The processes which have used up their quatum will have to wait for long, till the next epoch take place hence the waiting time can be high
+
+ROUND ROBIN/XINU SCHEDULING - 
+
+	Advantages:
+		Faster scheduling is done, due to simple priority based logic
+		The higher priority processes get executed or processed more, hence are given high CPU time
+
+	Disadvantages:
+		The lower priority processes get starved due to the priority in-check while scheduling
+
+*********************************************************************************
+2) Describe when each of the schedulers run the NULL process.
+
+Sol:
+
+RANDOMSCHED -
+
+The NULL process is scheduled, if there are no other processes in the ready queue (and according to the scheduler, all other process have priority greater than 0) before even the main process starts
+
+LINUXSCHED -
+
+The NULL process is scheduled, if the maximum goodness is zero, which means all the processes have not been scheduled(first epoch), or have used up their quantum for that epoch, and when the current process is not NULLPROC
+
+ROUND ROBIN/XINU SCHEDULING - 
+
+The NULL process is scheduled, if there are no other processes in the ready queue or when the ready queue has same priority processes(that is priority zero) , hence the CPU is being utilized
+
+*********************************************************************************
+3) Assume that there are three processes P1, P2, P3 that will run forever without blocking. We want to allocate the following CPU times to each of them: 20% to P1, 30% to P2, and 50% to P3. Which priorities do we need to set to P1, P2, and P3 to accomplish this if we want to use the Random scheduler? Assume that those processes are the only ones running in the machine. Could you give a generalization of your result to n processes? Explain.
+
+Sol:
+
+Since the random scheduler assigns the process to be scheduled, with the probability of it's priority, then the priorities given to the processes should be in the same ratio in which the CPU time is to be allocated. 
+Hence, the priorities for P1:P2:P3 should be 2:3:5 in this case, which can be for example 20, 30, 50 for P1 P2 P3 respectively. 
+In general, that is based on the cpu percentages it needs. 
+So the CPU percentage is the ( priority of that process ) / ( sum of priorities of all the processes) * 100, to make it the 100%, given the condition that the CPU percentates add upto 100, for all the runnable processes. 
+Hence the general formula for n processes can be :
+
+CPU% of a process P1 = (P1)/(P1 + P2 + ...Pn) * 100
